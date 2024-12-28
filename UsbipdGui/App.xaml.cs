@@ -122,7 +122,7 @@ namespace UsbipdGui
         {
             using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            var value = key?.GetValue("AppsUseLightTheme");
+            var value = key?.GetValue("SystemUsesLightTheme");
             return value is int i && i > 0;
         }
 
