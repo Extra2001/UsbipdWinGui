@@ -167,6 +167,54 @@ namespace UsbipdGui
             return false;
         }
 
+        public bool AttachToWSL(ref UsbDevice device)
+        {
+            if (ExecuteCommand("usbipd", $"attach --wsl -b {device.BusId}") is null)
+            {
+                return false;
+            }
+            List<UsbDevice> updatedDevices = GetUsbDevices();
+            if (updatedDevices.Count == 0)
+            {
+                return false;
+            }
+            foreach (UsbDevice udev in updatedDevices)
+            {
+                if (device.BusId == udev.BusId)
+                {
+                    if ((udev.State & UsbDevice.ConnectionStates.Attached) == UsbDevice.ConnectionStates.Attached)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool DetachFromWSL(ref UsbDevice device)
+        {
+            if (ExecuteCommand("usbipd", $"detach -b {device.BusId}") is null)
+            {
+                return false;
+            }
+            List<UsbDevice> updatedDevices = GetUsbDevices();
+            if (updatedDevices.Count == 0)
+            {
+                return false;
+            }
+            foreach (UsbDevice udev in updatedDevices)
+            {
+                if (device.BusId == udev.BusId)
+                {
+                    if ((udev.State & UsbDevice.ConnectionStates.Shared) == UsbDevice.ConnectionStates.Shared)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         private static string? ExecuteCommand(string command, string args)
         {
             try

@@ -4,9 +4,9 @@
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:Setup"
-"LanguageId" = "3:1041"
-"CodePage" = "3:932"
-"UILanguageId" = "3:1041"
+"LanguageId" = "3:2052"
+"CodePage" = "3:936"
+"UILanguageId" = "3:2052"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -16,12 +16,6 @@
         "Entry"
         {
         "MsmKey" = "8:_57D78640018F49F494EE127F38E44540"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C68336B1C75F468096F796502D60229F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -50,6 +44,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -188,7 +190,7 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:1041"
+        "LangId" = "3:2052"
         "RequiresElevation" = "11:FALSE"
         }
         "Product"
@@ -196,7 +198,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:UsbipdGui"
         "ProductCode" = "8:{F25B54D0-F514-469B-83BA-552EB33D1A9F}"
-        "PackageCode" = "8:{D2E8FA9C-AED7-416C-8860-BFA4475AF7C5}"
+        "PackageCode" = "8:{53067448-B405-48EB-9428-3787B51E3AFE}"
         "UpgradeCode" = "8:{8DB25F62-1A1B-42D5-80F5-564B42919D3B}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -316,18 +318,18 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_2E007898303A499FA198FABCC5AAFBBF"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E05C02908736456C898534805EB9C65A"
             {
-            "Name" = "8:UsbipdGui"
+            "Name" = "8:Shortcut to %sUser's Programs Menu"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_C68336B1C75F468096F796502D60229F"
+            "Target" = "8:_AE05F599933F45D4BFC5B3255267847A"
             "Folder" = "8:_AE05F599933F45D4BFC5B3255267847A"
-            "WorkingFolder" = "8:_CCEED909F85648549B921DCB022B19AD"
-            "Icon" = "8:_57D78640018F49F494EE127F38E44540"
+            "WorkingFolder" = "8:_AE05F599933F45D4BFC5B3255267847A"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
@@ -343,7 +345,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_74711582B60648B1B8303AE598820667"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:進行状況"
+                    "DisplayName" = "8:进度"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminProgressDlg.wid"
@@ -387,7 +389,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_5756BC091B51448FAA5866AF0109FB11"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:進行状況"
+                    "DisplayName" = "8:进度"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdProgressDlg.wid"
@@ -431,7 +433,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_46B06227A65043A6A72B0317B21F9134"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:完了"
+                    "DisplayName" = "8:已完成"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFinishedDlg.wid"
@@ -475,7 +477,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_28D25D4E28C5453DB918B09F947BEAEF"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:インストール フォルダー"
+                    "DisplayName" = "8:安装文件夹"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
@@ -510,7 +512,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_87CDD8643CED460FBF3C1B8D31911598"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:インストールの確認"
+                    "DisplayName" = "8:确认安装"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
@@ -532,7 +534,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_9E70D60EEA5E4FBA9A3D9A14A815C437"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:ようこそ"
+                    "DisplayName" = "8:欢迎使用"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
@@ -601,7 +603,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_5245B5335C5441AA87CA157FB2FC46C9"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:完了"
+                    "DisplayName" = "8:已完成"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFinishedDlg.wid"
@@ -632,7 +634,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_AF409A93660745B4B3674DEADDC4D172"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:ようこそ"
+                    "DisplayName" = "8:欢迎使用"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminWelcomeDlg.wid"
@@ -680,7 +682,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_C1F55A14618B445F8560FDB0E90A2C8F"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:インストール フォルダー"
+                    "DisplayName" = "8:安装文件夹"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
@@ -702,7 +704,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_E3611C74AB45406D9EC2D3BD2F939BCE"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:インストールの確認"
+                    "DisplayName" = "8:确认安装"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminConfirmDlg.wid"
@@ -729,9 +731,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C68336B1C75F468096F796502D60229F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1E61BF755BED45AC9F8CAEEB3A608F92"
             {
-            "SourcePath" = "8:..\\UsbipdGui\\obj\\Release\\net8.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\UsbipdGui\\obj\\Release\\net8.0-windows10.0.17763.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CCEED909F85648549B921DCB022B19AD"
@@ -753,7 +755,6 @@
             "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{EB93C03C-0161-4ADD-A991-E39D82957BC4}"
             "ShowKeyOutput" = "11:TRUE"
-            "PublishProfilePath" = "8:Properties\\PublishProfiles\\FolderProfile.pubxml"
                 "ExcludeFilters"
                 {
                 }

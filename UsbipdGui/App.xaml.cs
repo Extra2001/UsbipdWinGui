@@ -1,10 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Win32;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using UsbipdGui.Properties;
+using Windows.UI.Notifications;
 using static UsbipdGui.Usbipd;
 
 namespace UsbipdGui
@@ -165,26 +167,49 @@ namespace UsbipdGui
             ToolStripMenuItem item = new(desc)
             {
                 Tag = dev,
-                ToolTipText = "Bind this device (or Right click to ignore)"
+                //ToolTipText = "Bind this device (or Right click to ignore)"
             };
-            item.MouseUp += (sender, e) =>
             {
-                if (e.Button == MouseButtons.Left)
+                ToolStripMenuItem bindItem = new($"Bind")
                 {
-                    OnLeftClickToBindDevice(sender, e);
-                }
-                else if (e.Button == MouseButtons.Right)
+                    Tag = dev,
+                };
+                ToolStripMenuItem bindAttachItem = new("Bind && Attach to WSL")
                 {
-                    if ((sender as ToolStripMenuItem)?.Tag is not UsbDevice device) { return; }
-                    ContextMenuStrip subMenu = new();
-                    ToolStripMenuItem item = new($"Ignore {desc}", null, OnLeftClickToAddIgnoreList)
+                    Tag = dev,
+                };
+                ToolStripMenuItem ignoreItem = new($"Ignore")
+                {
+                    Tag = dev,
+                };
+
+                bindItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
                     {
-                        Tag = device
-                    };
-                    subMenu.Items.Add(item);
-                    subMenu.Show(Cursor.Position);
-                }
-            };
+                        OnLeftClickToBindDevice(sender, e);
+                    }
+                };
+                bindAttachItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        OnLeftClickToBindAttachDevice(sender, e);
+                    }
+                };
+                ignoreItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        OnLeftClickToAddIgnoreList(sender, e);
+                    }
+                };
+
+                item.DropDownItems.Add(bindItem);
+                item.DropDownItems.Add(bindAttachItem);
+                item.DropDownItems.Add(ignoreItem);
+            }
+
             return item;
         }
 
@@ -195,16 +220,40 @@ namespace UsbipdGui
             {
                 Tag = dev,
                 Image = _bindIconImage,
-                ToolTipText = "Unbind this device",
+                //ToolTipText = "Unbind this device",
             };
             item.Font = new System.Drawing.Font(item.Font, System.Drawing.FontStyle.Bold);
-            item.MouseUp += (sender, e) =>
             {
-                if (e.Button == MouseButtons.Left)
+                ToolStripMenuItem attachItem = new("Attach to WSL")
                 {
-                    OnLeftClickToUnbindDevice(sender, e);
-                }
-            };
+                    Tag = dev,
+                };
+                attachItem.Font = new System.Drawing.Font(attachItem.Font, System.Drawing.FontStyle.Regular);
+                ToolStripMenuItem unbindItem = new("Unbind")
+                {
+                    Tag = dev,
+                };
+                unbindItem.Font = new System.Drawing.Font(unbindItem.Font, System.Drawing.FontStyle.Regular);
+
+                attachItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        OnLeftClickToAttachDevice(sender, e);
+                    }
+                };
+                unbindItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        OnLeftClickToUnbindDevice(sender, e);
+                    }
+                };
+
+                item.DropDownItems.Add(attachItem);
+                item.DropDownItems.Add(unbindItem);
+            }
+
             return item;
         }
 
@@ -216,16 +265,40 @@ namespace UsbipdGui
             {
                 Tag = dev,
                 Image = _attachIconImage,
-                ToolTipText = "Unbind this device"
+                //ToolTipText = "Unbind this device"
             };
             item.Font = new System.Drawing.Font(item.Font, System.Drawing.FontStyle.Bold);
-            item.MouseUp += (sender, e) =>
             {
-                if (e.Button == MouseButtons.Left)
+                ToolStripMenuItem detachItem = new("Detach from WSL")
                 {
-                    OnLeftClickToUnbindDeviceWithCaution(sender, e);
-                }
-            };
+                    Tag = dev,
+                };
+                detachItem.Font = new System.Drawing.Font(detachItem.Font, System.Drawing.FontStyle.Regular);
+                ToolStripMenuItem detachUnbindItem = new("Detach && Unbind")
+                {
+                    Tag = dev,
+                };
+                detachUnbindItem.Font = new System.Drawing.Font(detachUnbindItem.Font, System.Drawing.FontStyle.Regular);
+
+                detachItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        OnLeftClickToDetachDevice(sender, e);
+                    }
+                };
+                detachUnbindItem.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        OnLeftClickToUnbindDeviceWithCaution(sender, e);
+                    }
+                };
+
+                item.DropDownItems.Add(detachItem);
+                item.DropDownItems.Add(detachUnbindItem);
+            }
+
             return item;
         }
 
@@ -463,17 +536,94 @@ namespace UsbipdGui
             _startupAtRun = StartupSettings.IsRegistered(_appName);
         }
 
+
+        private void ShowNotification(string title, params string[] contents)
+        {
+            var builder = new ToastContentBuilder()
+                .AddText(title);
+            foreach (string content in contents)
+            {
+                builder.AddText(content);
+            }
+            builder.Show(toast =>
+            {
+                toast.Tag = "UsbipdGui";
+            });
+        }
+
         private void OnLeftClickToBindDevice(object? sender, EventArgs e)
         {
             if ((sender as ToolStripMenuItem)?.Tag is not UsbDevice device)
             {
                 return;
             }
+            ShowNotification("Binding...", $"{device.BusId} {device.Description}");
             Debug.WriteLine($"usbipd bind {device.BusId}");
             if (!_usbipd?.Bind(ref device) ?? false)
             {
                 Debug.WriteLine($"Failed to bind {device.BusId}");
+                ShowNotification("Failed to bind", $"{device.BusId} {device.Description}");
+                return;
             }
+            ShowNotification("Binded successfully", $"{device.BusId} {device.Description}");
+        }
+
+        private void OnLeftClickToBindAttachDevice(object? sender, EventArgs e)
+        {
+            if ((sender as ToolStripMenuItem)?.Tag is not UsbDevice device)
+            {
+                return;
+            }
+            ShowNotification("Bind & Attaching...", $"{device.BusId} {device.Description}");
+            Debug.WriteLine($"usbipd bind {device.BusId}");
+            if (!_usbipd?.Bind(ref device) ?? false)
+            {
+                Debug.WriteLine($"Failed to bind {device.BusId}");
+                ShowNotification("Failed to bind", $"{device.BusId} {device.Description}");
+                return;
+            }
+            Debug.WriteLine($"usbipd attach {device.BusId}");
+            if (!_usbipd?.AttachToWSL(ref device) ?? false)
+            {
+                Debug.WriteLine($"Failed to attach {device.BusId}");
+                ShowNotification("Failed to attach", "Maybe WSL not running?", $"{device.BusId} {device.Description}");
+                return;
+            }
+            ShowNotification("Binded & Attached successfully", $"{device.BusId} {device.Description}");
+        }
+
+        private void OnLeftClickToAttachDevice(object? sender, EventArgs e)
+        {
+            if ((sender as ToolStripMenuItem)?.Tag is not UsbDevice device)
+            {
+                return;
+            }
+            Debug.WriteLine($"usbipd attach {device.BusId}");
+            if (!_usbipd?.AttachToWSL(ref device) ?? false)
+            {
+                Debug.WriteLine($"Failed to attach {device.BusId}");
+                ShowNotification("Failed to attach", "Maybe WSL not running?", $"{device.BusId} {device.Description}");
+                return;
+            }
+            ShowNotification("Attached successfully", $"{device.BusId} {device.Description}");
+        }
+
+        private void OnLeftClickToDetachDevice(object? sender, EventArgs e)
+        {
+            if ((sender as ToolStripMenuItem)?.Tag is not UsbDevice device)
+            {
+                return;
+            }
+            Debug.WriteLine($"usbipd detach {device.BusId}");
+            if (!_usbipd?.DetachFromWSL(ref device) ?? false)
+            {
+                Debug.WriteLine($"Failed to detach {device.BusId}");
+                ShowNotification("Failed to detach", $"{device.BusId} {device.Description}");
+                return;
+            }
+
+            ShowNotification("Detached successfully", $"{device.BusId} {device.Description}");
+
         }
 
         private void OnLeftClickToUnbindDevice(object? sender, EventArgs e)
@@ -483,10 +633,15 @@ namespace UsbipdGui
                 return;
             }
             Debug.WriteLine($"usbipd unbind {device.BusId}");
+            ShowNotification("Unbinding...", $"{device.BusId} {device.Description}");
             if (!_usbipd?.Unbind(ref device) ?? false)
             {
                 Debug.WriteLine($"Failed to unbind {device.BusId}");
+                ShowNotification("Failed to unbind", $"{device.BusId} {device.Description}");
+                return;
             }
+
+            ShowNotification("Unbinded successfully", $"{device.BusId} {device.Description}");
         }
 
         private void OnLeftClickToUnbindDeviceWithCaution(object? sender, EventArgs e)
@@ -503,10 +658,14 @@ namespace UsbipdGui
                 ) == System.Windows.Forms.DialogResult.Yes)
             {
                 Debug.WriteLine($"usbipd unbind {device.BusId}");
+                ShowNotification("Unbinding...", $"{device.BusId} {device.Description}");
                 if (!_usbipd?.Unbind(ref device) ?? false)
                 {
                     Debug.WriteLine($"Failed to unbind {device.BusId}");
+                    ShowNotification("Failed to unbind", $"{device.BusId} {device.Description}");
+                    return;
                 }
+                ShowNotification("Unbinded successfully", $"{device.BusId} {device.Description}");
             }
         }
 
